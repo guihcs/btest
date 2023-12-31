@@ -1,5 +1,5 @@
-const express = require('express')
-const { InteractionType, InteractionResponseType } = require('discord-interactions');
+import express from 'express'
+import { InteractionType, InteractionResponseType } from 'discord-interactions';
 
 const app = express()
 const port = process.env.PORT || 3000
