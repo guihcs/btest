@@ -1,8 +1,10 @@
-import express from 'express'
-import { InteractionType, InteractionResponseType } from 'discord-interactions';
-
+const express = require('express')
+const { InteractionType, InteractionResponseType } = require('discord-interactions')
+const { verifyDiscordRequest } = require('./discord.js')
 const app = express()
 const port = process.env.PORT || 3000
+
+app.use(express.json({ verify: verifyDiscordRequest(process.env.PUBLIC_KEY) }));
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
