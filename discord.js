@@ -1,6 +1,6 @@
 const { verifyKey } = require('discord-interactions');
 
-export function verifyDiscordRequest(clientKey) {
+function verifyDiscordRequest(clientKey) {
     return function (req, res, buf, encoding) {
         const signature = req.get('X-Signature-Ed25519');
         const timestamp = req.get('X-Signature-Timestamp');
@@ -11,4 +11,9 @@ export function verifyDiscordRequest(clientKey) {
             throw new Error('Bad request signature');
         }
     };
+}
+
+
+module.exports = {
+    verifyDiscordRequest
 }

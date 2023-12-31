@@ -1,6 +1,7 @@
 const express = require('express')
 const { InteractionType, InteractionResponseType } = require('discord-interactions')
 const { verifyDiscordRequest } = require('./discord.js')
+const axios = require('axios');
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -27,17 +28,68 @@ app.post('/interactions', async (req, res) => {
                 },
             });
         } else if (name === 'mute') {
+
+            let users = await axios.get('https://discord.com/api/v10/guilds/1157450701207769181/members?limit=1000', {
+                headers: {
+                    Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'User-Agent': 'DiscordBot'
+                }
+            })
+
+            let selectedUsers = users.data.filter((user) => {
+                return user.roles.includes('1159201118979637288')
+            })
+
+            for (const user of selectedUsers) {
+                await axios.patch(`https://discord.com/api/v10/guilds/1157450701207769181/members/${user.user.id}`, {
+                    mute: true
+                }, {
+                    headers: {
+                        Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'User-Agent': 'DiscordBot'
+                    }
+                })
+            }
+
+
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
-                    content: 'mute',
+                    content: 'Cala a boca seus cavalo.',
                 },
             });
         } else if (name === 'unmute') {
+
+            let users = await axios.get('https://discord.com/api/v10/guilds/1157450701207769181/members?limit=1000', {
+                headers: {
+                    Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'User-Agent': 'DiscordBot'
+                }
+            })
+
+            let selectedUsers = users.data.filter((user) => {
+                return user.roles.includes('1159201118979637288')
+            })
+
+            for (const user of selectedUsers) {
+                await axios.patch(`https://discord.com/api/v10/guilds/1157450701207769181/members/${user.user.id}`, {
+                    mute: false
+                }, {
+                    headers: {
+                        Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+                        'Content-Type': 'application/json; charset=UTF-8',
+                        'User-Agent': 'DiscordBot'
+                    }
+                })
+            }
+
             return res.send({
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: {
-                    content: 'unmute',
+                    content: 'Pode falar agora vcs é lindo.',
                 },
             });
         }
